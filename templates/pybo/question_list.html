@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load pybo_filter %}
+{% block content %}
+
+<!--공용 html 적용 후 해당 부분 삭제{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+1, 2번 라인 부분 추가. 상속 진행-
+{% load pybo_filter %} : 빼기필터를 사용하기 위해 로드
+->
+
+<!--부트스트랩 적용 후-->
+<div class="container my-3">
+    <table class="table">
+        <thead>
+        <tr class="text-center thead-dark">
+            <th>번호</th>
+            <th style="width:50%">제목</th>
+            <th>글쓴이</th>
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if question_list %}
+        {% for question in question_list %}
+        <tr class="text-center">
+            <td>
+                <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
+                {{ question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1 }}
+            </td>
+            <!--기존 번호표현 for문-->
+            <!--번호는 for 문의 현재 순서를 의미하는 {{ forloop.counter }}를 이용
+            <td>{{ forloop.counter }}</td>-->
+            <td class="text-left">
+
+                    <a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
+                      {% if question.answer_set.count > 0 %}
+                     <span class="text-danger small ml-2">{{ question.answer_set.count }}</span>
+                     {% endif %}
+                    <!-- { if question.answer_set.count > 0 %}로 답변이 있는 경우를 검사하고, {{ question.answer_set.count }}로 답변 개수를 표시했다 -->
+
+            </td>
+             <td>{{ question.author.username }}</td>  <!-- 글쓴이 추가 -->
+            <td>{{ question.create_date }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="3">질문이 없습니다.</td>
+        </tr>
+
+        {% endif %}
+        </tbody>
+    </table>
+
+    <!-- 페이징처리 시작 -->
+    <ul class="pagination justify-content-center">
+        <!-- 이전페이지 -->
+        {% if question_list.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ question_list.previous_page_number }}">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+        </li>
+        {% endif %}
+        <!-- 페이지리스트 -->
+        {% for page_number in question_list.paginator.page_range %}
+        {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
+        <!--여기서 사용한 |add:-5, |add:5 는 템플릿 필터이다. |add:-5는 5만큼 빼라는 의미이고 |add:5는 5만큼 더하라는 의미이다.-->
+            {% if page_number == question_list.number %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+        {% endif %}
+
+        {% endfor %}
+        <!-- 다음페이지 -->
+        {% if question_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ question_list.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+    <!-- 페이징처리 끝 -->
+    <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">질문 등록하기</a>
+    <!--부트스트랩의 btn btn-primary 클래스를 적용하면 버튼으로 보인다. 버튼을 클릭하면 pybo:question_create 별칭에 해당되는 URL이 호출될 것이다-->
+
+</div>
+
+{% endblock %}
+
+<!--부트스트랩 적용 전-->
+<!--{% if question_list %}-->
+<!--    <ul>-->
+<!--    {% for question in question_list %}-->
+<!--        <li><a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a></li>-->
+        <!-- 하드코딩 되어 있던 /pybo/{{ question.id }} 링크가 url 'detail' question.id로 변경되어짐-->
+        <!-- detail 앞에 url.py에서 추가한 app_name의 'pybo'가 추가됨.-->
+<!--    {% endfor %}-->
+<!--    </ul>-->
+<!--{% else %}-->
+<!--    <p>질문이 없습니다.</p>-->
+<!--{% endif %}-->
