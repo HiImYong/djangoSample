@@ -27,5 +27,14 @@
 <script src="{% static 'jquery-3.6.0.min.js' %}"></script>
 <!-- Bootstrap JS -->
 <script src="{% static 'bootstrap.min.js' %}"></script>
+
+<!-- 자바스크립트 Start
+  jQuery 자바스크립트를 작성하기 위해서는 jQuery 라이브러리를 먼저 로드해야 하기 때문이다.
+  base.html을 상속하는 템플릿은 jQuery 라이브러리를 신경쓸 필요없이
+  { block script }{ endblock } 블록에 jQuery 자바스크립트를 작성하면 된다.-->
+{% block script %}
+{% endblock %}
+<!-- 자바스크립트 End -->
+
 </body>
 </html>

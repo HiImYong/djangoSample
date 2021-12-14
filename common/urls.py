@@ -10,4 +10,5 @@ urlpatterns = [
     # common 디렉토리에서 login.html 파일을 참조하겠다.
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
+
 ]

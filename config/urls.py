@@ -1,8 +1,13 @@
 from django.contrib import admin
-from django.urls import path, include
 from pybo import views
+from django.conf import settings
+from django.urls import include, path
 
 #from pybo import views  # 더 이상 필요하지 않으므로 삭제
+
+
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,3 +16,4 @@ urlpatterns = [
     path('', views.index, name='index'),  # '/' 에 해당되는 path. / 다음에 아무것도 없으면 pybo/views.py 파일의 index 함수가 실행된다
 
 ]
+

@@ -32,4 +32,3 @@ class Answer(models.Model):
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)  # 수정 일시
 
-
